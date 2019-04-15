@@ -13,6 +13,7 @@ from keras.layers import (
     LSTM,
     Embedding,
     BatchNormalization,
+    Bidirectional,
     )
 
 LAYERS = (
@@ -26,6 +27,7 @@ LAYERS = (
     LSTM,
     Embedding,
     BatchNormalization,
+    Bidirectional,
 )
 
 ACTIVATIONS = (
@@ -179,6 +181,7 @@ def _(layer, f):
     inner_activation = layer.get_config()['recurrent_activation']
     activation = layer.get_config()['activation']
     return_sequences = int(layer.get_config()['return_sequences'])
+    go_backwards = int(layer.get_config()['go_backwards'])
 
     weights = layer.get_weights()
     units = layer.units
@@ -188,6 +191,7 @@ def _(layer, f):
                                        weights[1].transpose(),
                                        weights[2]))
     bias = [x.reshape(1, -1) for x in bias]
+
     for tensors in zip(kernel, rkernel, bias):
         for tensor in tensors:
             write_tensor(f, tensor, 2)
@@ -195,12 +199,23 @@ def _(layer, f):
     export_activation(inner_activation, f)
     export_activation(activation, f)
     f.write(struct.pack('I', return_sequences))
+    f.write(struct.pack('I', go_backwards))
 
 
 @export.register(Embedding)
 def _(layer, f):
     weights = layer.get_weights()[0]
     write_tensor(f, weights, 2)
+
+@export.register(Bidirectional)
+def _(layer, f):
+    #print(layer.input_spec)
+    f.write(struct.pack('I', LAYERS.index(type(layer.forward_layer)) + 1))
+    export(layer.forward_layer, f)
+
+    f.write(struct.pack('I', LAYERS.index(type(layer.backward_layer)) + 1))
+    export(layer.backward_layer, f)
+
 
 
 def export_model(model, filename):

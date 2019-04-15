@@ -15,12 +15,14 @@ namespace keras2cpp {
             LSTM = 10,
             Embedding = 11,
             BatchNormalization = 12,
+            Bidirectional = 13,
         };
         std::vector<std::unique_ptr<BaseLayer>> layers_;
         
-        static std::unique_ptr<BaseLayer> make_layer(Stream&);
+        
 
     public:
+        static std::unique_ptr<BaseLayer> make_layer(Stream&);
         Model(Stream& file);
         Tensor operator()(const Tensor& in) const noexcept override;
     };

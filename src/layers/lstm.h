@@ -15,11 +15,10 @@ namespace keras2cpp{
             Tensor Wo_;
             Tensor Uo_;
             Tensor bo_;
-        
             Activation inner_activation_;
             Activation activation_;
             bool return_sequences_{false};
-        
+            bool go_backwards_{false};
             std::tuple<Tensor, Tensor>
             step(const Tensor& x, const Tensor& ht_1, const Tensor& ct_1)
                  const noexcept;

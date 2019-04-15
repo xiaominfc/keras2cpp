@@ -84,8 +84,30 @@ project(keras2cpp)
 
 include_directories(keras2cpp PRIVATE "./include")
 
-add_executable(keras2cpp "")
-target_sources(keras2cpp PRIVATE
+#add_executable(keras2cpp "")
+#target_sources(keras2cpp PRIVATE
+#    src/utils.cc
+#    src/baseLayer.cc
+#    src/layers/activation.cc
+#    src/layers/conv1d.cc
+#    src/layers/conv2d.cc
+#    src/layers/dense.cc
+#    src/layers/elu.cc
+#    src/layers/embedding.cc
+#    src/layers/flatten.cc
+#    src/layers/lstm.cc
+#    src/layers/locally1d.cc
+#    src/layers/locally2d.cc
+#    src/layers/maxPooling2d.cc
+#    src/layers/batchNormalization.cc
+#    src/layers/bidirectional.cc
+#    src/model.cc
+#    src/tensor.cc
+#    cpp_model.cc
+#)
+
+
+ADD_LIBRARY(keras2cpp SHARED 
     src/utils.cc
     src/baseLayer.cc
     src/layers/activation.cc
@@ -100,8 +122,8 @@ target_sources(keras2cpp PRIVATE
     src/layers/locally2d.cc
     src/layers/maxPooling2d.cc
     src/layers/batchNormalization.cc
+    src/layers/bidirectional.cc
     src/model.cc
     src/tensor.cc
-    cpp_model.cc
 )
 

@@ -17,20 +17,27 @@ namespace keras2cpp{
         , bo_(file, 2) // Output
         , inner_activation_(file)
         , activation_(file)
-        , return_sequences_(static_cast<unsigned>(file)) {}
+        , return_sequences_(static_cast<unsigned>(file)) 
+        , go_backwards_(static_cast<unsigned>(file)){
+            
+        }
 
         Tensor LSTM::operator()(const Tensor& in) const noexcept {
             // Assume 'bo_' always keeps the output shape and we will always
             // receive one single sample.
             size_t out_dim = bo_.dims_[1];
             size_t steps = in.dims_[0];
-
             Tensor c_tm1 {1, out_dim};
 
             if (!return_sequences_) {
                 Tensor out {1, out_dim};
-                for (size_t s = 0; s < steps; ++s)
-                    std::tie(out, c_tm1) = step(in.select(s), out, c_tm1);
+                for (size_t s = 0; s < steps; ++s) {
+                    int tmp_s = s;
+                    if(go_backwards_){
+                        tmp_s = steps - 1 - s;
+                    }
+                    std::tie(out, c_tm1) = step(in.select(tmp_s), out, c_tm1);
+                }
                 return out.flatten();
             }
 
@@ -38,7 +45,11 @@ namespace keras2cpp{
             Tensor last {1, out_dim};
 
             for (size_t s = 0; s < steps; ++s) {
-                std::tie(last, c_tm1) = step(in.select(s), last, c_tm1);
+                int tmp_s = s;
+                if(go_backwards_){
+                    tmp_s = steps - 1 - s;
+                }
+                std::tie(last, c_tm1) = step(in.select(tmp_s), last, c_tm1);
                 out.data_.insert(out.end(), last.begin(), last.end());
             }
             return out;

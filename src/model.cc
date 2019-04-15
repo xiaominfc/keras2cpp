@@ -10,6 +10,7 @@
 #include "layers/lstm.h"
 #include "layers/maxPooling2d.h"
 #include "layers/batchNormalization.h"
+#include "layers/bidirectional.h"
 
 namespace keras2cpp {
     std::unique_ptr<BaseLayer> Model::make_layer(Stream& file) {
@@ -38,6 +39,8 @@ namespace keras2cpp {
                 return layers::Embedding::make(file);
             case BatchNormalization:
                 return layers::BatchNormalization::make(file);
+            case Bidirectional:
+                return layers::Bidirectional::make(file);
         }
         return nullptr;
     }
@@ -51,8 +54,9 @@ namespace keras2cpp {
 
     Tensor Model::operator()(const Tensor& in) const noexcept {
         Tensor out = in;
-        for (auto&& layer : layers_)
+        for (auto&& layer : layers_){
             out = (*layer)(out);
+        }
         return out;
     }
 }

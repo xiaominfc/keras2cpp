@@ -29,6 +29,7 @@ Supported Keras layers:
 - [ ] GRU
 - [ ] CNN
 - [X] BatchNormalization
+- [X] Bidirectional
 
 Supported activation:
 - [x] linear
@@ -112,8 +113,10 @@ $ mkdir build && cd build
 $ python3 ../python_model.py
 [[-1.85735667]]
 
+$ cp ./example.model ./build/ 
 $ cmake ..
 $ cmake --build .
+$ g++ -std=c++17 -Wl,-rpath -Wl,$(pwd)  -lkeras2cpp -L./ -I../src/ ../cpp_model.cc -o cpp_model
 $ ./keras2cpp
 [ -1.857357 ]
 ```
