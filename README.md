@@ -116,7 +116,12 @@ $ python3 ../python_model.py
 $ cp ./example.model ./build/ 
 $ cmake ..
 $ cmake --build .
+
+#mac os 
 $ g++ -std=c++17 -Wl,-rpath -Wl,$(pwd)  -lkeras2cpp -L./ -I../src/ ../cpp_model.cc -o cpp_model
+#linux
+$ g++ -std=c++17 -L. -I ../src/  -o cpp_model ../cpp_model.cc ./libkeras2cpp.* 
+
 $ ./cpp_model
 [ -1.857357 ]
 ```
