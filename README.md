@@ -117,7 +117,7 @@ $ cp ./example.model ./build/
 $ cmake ..
 $ cmake --build .
 $ g++ -std=c++17 -Wl,-rpath -Wl,$(pwd)  -lkeras2cpp -L./ -I../src/ ../cpp_model.cc -o cpp_model
-$ ./keras2cpp
+$ ./cpp_model
 [ -1.857357 ]
 ```
 
